@@ -1,4 +1,4 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from HTTPServer import BaseHTTPRequestHandler, HTTPServer
 import subprocess
 
 
@@ -7,12 +7,15 @@ class HTTPServerHandler(BaseHTTPRequestHandler):
 		self.send_response(200)
 		self.send_header("Content-type", "text/html")
 		self.end_headers()
-		message = "INVALID REQUEST"
+		message = "INVALID REQUEST\n"
+		pathArr = self.path.split("?")
+		self.path = pathArr[0]
+		varString = pathArr[1]
 		if self.path == "/":
 			message = "TRUE\n"
 		elif self.path == "/currentOS":
 			message = "rasplex\n"
-		self.wfile.write(bytes(message, 'utf8'))
+		self.wfile.write(bytes(message))
 		return
 
 	def do_POST(self):
@@ -48,7 +51,7 @@ class HTTPServerHandler(BaseHTTPRequestHandler):
 				message = subprocess.check_output("hdmi", shell=True).decode()
 			except:
 				message = "reboot failed"
-		self.wfile.write(bytes(message, 'utf8'))
+		self.wfile.write(bytes(message))
 
 	def getVars(self):
 		varString = self.rfile.read(int(self.headers['Content-Length'])).decode()
