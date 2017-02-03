@@ -47,7 +47,7 @@ while 1:
 					newOS = variables["osName"].lower()
 					if newOS == "raspbian" or newOS == "retropie" or newOS == "kodi":
 						try:
-							message = subprocess.check_output(newOS, shell=True).decode()
+							message = subprocess.check_output("./%s" % newOS, shell=True).decode()
 						except Exception as e:
 							message = "Switch was not sucessfully excecuted: %s" % str(e)
 					else:
@@ -61,12 +61,12 @@ while 1:
 					message = "reboot failed:"
 			elif path == "/rca":
 				try:
-					message = subprocess.check_output("rca", shell=True).decode()
+					message = subprocess.check_output("./rca", shell=True).decode()
 				except:
 					message = "reboot failed"
 			elif path == "/hdmi":
 				try:
-					message = subprocess.check_output("hdmi", shell=True).decode()
+					message = subprocess.check_output("./hdmi", shell=True).decode()
 				except:
 					message = "reboot failed"
 		connectionSocket.send(message)
