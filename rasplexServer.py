@@ -27,6 +27,7 @@ while 1:
 		requestHeader = HTTPHeaders[0].split(" ")
 		method = requestHeader[0]
 		path = requestHeader[1]
+		headers = "HTTP/1.1 200 OK\nContent-Type: text/plain\n\n"
 		message = "INVALID REQUEST"
 		if method == "GET":
 			pathStr = path
@@ -69,7 +70,7 @@ while 1:
 					message = subprocess.check_output("./hdmi", shell=True).decode()
 				except:
 					message = "reboot failed"
-		connectionSocket.send(message)
+		connectionSocket.send(headers + message)
 		connectionSocket.close()
 	finally:
 		connectionSocket.close()
