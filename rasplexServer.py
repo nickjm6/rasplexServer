@@ -48,7 +48,9 @@ while 1:
 					newOS = variables["osName"].lower()
 					if newOS == "raspbian" or newOS == "retropie" or newOS == "kodi":
 						try:
-							message = subprocess.check_output("./%s" % newOS, shell=True).decode()
+							message = "attempting to switch OS"
+							connectionSocket.send(headers + message)
+							subprocess.check_output("./%s" % newOS, shell=True).decode()
 						except Exception as e:
 							message = "Switch was not sucessfully excecuted: %s" % str(e)
 					else:
@@ -57,19 +59,37 @@ while 1:
 					message = "Please enter an OS to switch to"
 			elif path == "/reboot":
 				try:
-					message = subprocess.check_output("reboot", shell=True).decode()
+					message = "attempting reboot"
+					connectionSocket.send(headers + message)
+					subprocess.check_output("reboot", shell=True).decode()
 				except:
 					message = "reboot failed:"
 			elif path == "/rca":
 				try:
-					message = subprocess.check_output("./rca", shell=True).decode()
+					message = "attempting reboot"
+					connectionSocket.send(headers + message)
+					subprocess.check_output("./rca", shell=True).decode()
 				except:
 					message = "reboot failed"
 			elif path == "/hdmi":
 				try:
-					message = subprocess.check_output("./hdmi", shell=True).decode()
+					message = "attempting reboot"
+					connectionSocket.send(headers + message)
+					subprocess.check_output("./hdmi", shell=True).decode()
 				except:
 					message = "reboot failed"
+			elif path == "/volumeup":
+				try:
+					subprocess.check_output("./vol +", shell=True).decode()
+					message = "volume increased"
+				except:
+					message = "volume change failed"
+			elif path == "/volumedown":
+				try:
+					subprocess.check_output("./vol -", shell=True).decode()
+					message = "volume decreased"
+				except:
+					message = "volume change failed"
 		connectionSocket.send(headers + message)
 		connectionSocket.close()
 	finally:
