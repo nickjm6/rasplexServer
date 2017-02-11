@@ -9,6 +9,7 @@ vol = 100
 
 
 def updateVol(upordown):
+	global vol
 	if upordown == "+":
 		vol += 5
 	elif upordown == "-":
@@ -17,6 +18,7 @@ def updateVol(upordown):
 		vol = 100
 	elif vol < 0:
 		vol = 0
+	return vol
 
 def getVars(varString):
 	varArr = varString.split("&")
@@ -94,16 +96,16 @@ while 1:
 					message = "reboot failed"
 			elif path == "/volumeup":
 				try:
-					updateVol("+")
-					message = "%d\n" % vol
+					newVol = updateVol("+")
+					message = "%d\n" % newVol
 					# subprocess.check_output("./vol +", shell=True).decode()
 					# message = "volume increased"
 				except:
 					message = "%d\n" % vol
 			elif path == "/volumedown":
 				try:
-					updateVol("-")
-					message = "%d\n" % vol
+					newVol = updateVol("-")
+					message = "%d\n" % newVol
 					# subprocess.check_output("./vol -", shell=True).decode()
 					# message = "volume decreased"
 				except:
