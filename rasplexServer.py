@@ -5,6 +5,18 @@ serverPort = 9876
 serverSocket = socket(AF_INET,SOCK_STREAM)
 serverSocket.bind(('',serverPort))
 serverSocket.listen(1)
+vol = 100
+
+
+def updateVol(upordown):
+	if upordown == "+":
+		vol += 5
+	elif upordown == "-":
+		vol -= 5
+	if vol > 100:
+		vol = 100
+	elif vol < 0:
+		vol = 0
 
 def getVars(varString):
 	varArr = varString.split("&")
@@ -40,6 +52,8 @@ while 1:
 				message = "TRUE\n"
 			elif path == "/currentOS":
 				message = "rasplex\n"
+			elif path == "/getVol":
+				message = "%d\n" % vol
 		elif method == "POST":
 			variableArr = HTTPHeaders[-1]
 			if path == "/switchOS":
@@ -80,16 +94,20 @@ while 1:
 					message = "reboot failed"
 			elif path == "/volumeup":
 				try:
-					subprocess.check_output("./vol +", shell=True).decode()
-					message = "volume increased"
+					updateVol("+")
+					message = "%d\n" % vol
+					# subprocess.check_output("./vol +", shell=True).decode()
+					# message = "volume increased"
 				except:
-					message = "volume change failed"
+					message = "%d\n" % vol
 			elif path == "/volumedown":
 				try:
-					subprocess.check_output("./vol -", shell=True).decode()
-					message = "volume decreased"
+					updateVol("-")
+					message = "%d\n" % vol
+					# subprocess.check_output("./vol -", shell=True).decode()
+					# message = "volume decreased"
 				except:
-					message = "volume change failed"
+					message = "%d\n" % vol
 		connectionSocket.send(headers + message)
 		connectionSocket.close()
 	finally:
