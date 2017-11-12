@@ -69,7 +69,7 @@ while 1:
 			#Now actually manage the calls
 			if path == "/":
 				#This call acts as a ping to see if raspberry pi is on
-				message = "TRUE\n" 
+				message = "MyRazPi\n" 
 			elif path == "/currentOS":
 				#This call returns the current operating system, which will always be rasplex
 				message = "rasplex\n"
