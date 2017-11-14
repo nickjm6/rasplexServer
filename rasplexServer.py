@@ -69,10 +69,10 @@ while 1:
 			#Now actually manage the calls
 			if path == "/":
 				#This call acts as a ping to see if raspberry pi is on
-				message = "MyRazPi\n" 
+				message = "MyRazPi" 
 			elif path == "/currentOS":
 				#This call returns the current operating system, which will always be rasplex
-				message = "rasplex\n"
+				message = "rasplex"
 			elif path == "/getVol":
 				#This call return the volume level
 				message = "%d\n" % vol
