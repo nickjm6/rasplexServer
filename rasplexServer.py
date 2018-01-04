@@ -85,6 +85,9 @@ while 1:
 				#This call return the volume level
 				statusCode = "200 OK"
 				message = vol
+			elif path == "/osAndVolume":
+				statusCode = "200 OK"
+				message = {volume: vol, os: "rasplex"};
 		#Manage POSTS requests
 		elif method == "POST":
 			#get the variables from HTTP request in the last header
