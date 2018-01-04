@@ -87,7 +87,7 @@ while 1:
 				message = vol
 			elif path == "/osAndVolume":
 				statusCode = "200 OK"
-				message = {volume: vol, os: "rasplex"};
+				message = "volume=%d&os=rasplex" % vol
 		#Manage POSTS requests
 		elif method == "POST":
 			#get the variables from HTTP request in the last header
