@@ -92,17 +92,21 @@ while 1:
 		elif method == "POST":
 			#get the variables from HTTP request in the last header
 			variableArr = HTTPHeaders[-1]
+			variables = getVars(variableArr)
 			if path == "/switchOS":
 				#This call will switch the operating system if the request is valid
-				variables = getVars(variableArr)
 				if "osName" in variables.keys():
 					newOS = variables["osName"].lower()
 					if newOS == "raspbian" or newOS == "retropie" or newOS == "kodi":
 						try:
-							message = "attempting to switch OS"
-							statusCode = "200 OK"
-							connectionSocket.send(createHeader(statusCode, message))
-							subprocess.check_output("./%s" % newOS, shell=True).decode()
+							if "test" in variables.keys():
+								message = "success"
+								statusCode = "200 OK"
+							else:
+								message = "attempting to switch OS"
+								statusCode = "200 OK"
+								connectionSocket.send(createHeader(statusCode, message))
+								subprocess.check_output("./%s" % newOS, shell=True).decode()
 						except Exception as e:
 							message = "Switch was not sucessfully excecuted: %s" % str(e)
 					else:
@@ -112,28 +116,40 @@ while 1:
 			elif path == "/reboot":
 				#This call will reboot the raspberry pi
 				try:
-					message = "attempting reboot"
-					statusCode = "200 OK"
-					connectionSocket.send(createHeader(statusCode, message))
-					subprocess.check_output("reboot", shell=True).decode()
+					if "test" in variables.keys():
+						message = "success"
+						statusCode = "200 OK"
+					else:
+						message = "attempting reboot"
+						statusCode = "200 OK"
+						connectionSocket.send(createHeader(statusCode, message))
+						subprocess.check_output("reboot", shell=True).decode()
 				except:
 					message = "reboot failed:"
 			elif path == "/rca":
 				#this call sets display mode to RCA, displaying on my LCD touchscreen
 				try:
-					message = "attempting reboot"
-					statusCode = "200 OK"
-					connectionSocket.send(createHeader(statusCode, message))
-					subprocess.check_output("./rca", shell=True).decode()
+					if "test" in variables.keys():
+						message = "success"
+						statusCode = "200 OK"
+					else:
+						message = "attempting reboot"
+						statusCode = "200 OK"
+						connectionSocket.send(createHeader(statusCode, message))
+						subprocess.check_output("./rca", shell=True).decode()
 				except:
 					message = "reboot failed"
 			elif path == "/hdmi":
 				#This call will set display mode to HDMI
 				try:
-					message = "attempting reboot"
-					statusCode = "200 OK"
-					connectionSocket.send(createHeader(statusCode, message))
-					subprocess.check_output("./hdmi", shell=True).decode()
+					if "test" in variables.keys():
+						message = "success"
+						statusCode = "200 OK"
+					else:
+						message = "attempting reboot"
+						statusCode = "200 OK"
+						connectionSocket.send(createHeader(statusCode, message))
+						subprocess.check_output("./hdmi", shell=True).decode()
 				except:
 					message = "reboot failed"
 			elif path == "/volumeup":
