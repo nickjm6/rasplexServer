@@ -42,8 +42,8 @@ def getVars(varString):
 
 def createHeader(status, message):
 	version = "HTTP/1.1"
-	contentType = "Content-Type: text/plain\n\n"
-	res = "%s %s\n%s%s" % (version, status, contentType, message)
+	headers = "Content-Type: text/plain\r\nAccess-Control-Allow-Origin: *\r\n"
+	res = "%s %s\n%s%s" % (version, status, headers, message)
 	return res;
 
 print 'The server is ready to receive'
