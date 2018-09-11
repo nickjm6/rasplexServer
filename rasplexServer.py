@@ -42,7 +42,7 @@ def getVars(varString):
 
 def createHeader(status, message):
 	version = "HTTP/1.1"
-	headers = "Content-Type: text/plain\nAccess-Control-Allow-Origin: *\n\n"
+	headers = "Content-Type: text/json\nAccess-Control-Allow-Origin: *\n\n"
 	res = "%s %s\n%s%s" % (version, status, headers, message)
 	return res;
 
@@ -61,7 +61,7 @@ while 1:
 		method = requestHeader[0]
 		path = requestHeader[1]
 		#Set up header to be sent as a request
-		message = "INVALID REQUEST"
+		message = "{\"message\": \"INVALID REQUEST\"}"
 		statusCode = "400 Bad Request"
 		#Manage GET Requests
 		if method == "GET":
@@ -73,21 +73,22 @@ while 1:
 				variableStr = pathArr[1]
 				variables = getVars(variableStr)
 			#Now actually manage the calls
-			if path == "/":
+			if path == "/ping":
 				#This call acts as a ping to see if raspberry pi is on
-				message = "MyRazPi" 
+				message = "{\"message\": \"MyRazPi\"}" 
 				statusCode = "200 OK"
 			elif path == "/currentOS":
 				#This call returns the current operating system, which will always be rasplex
-				message = "rasplex"
+				message = "{\"currentOS\": \"rasplex\"}"
 				statusCode = "200 OK"
 			elif path == "/getVol":
 				#This call return the volume level
 				statusCode = "200 OK"
-				message = vol
+				message = "{\"volume\": \"%s\"}" % vol
+				print(message)
 			elif path == "/osAndVolume":
 				statusCode = "200 OK"
-				message = "volume=%d&os=rasplex" % vol
+				message = "{\"volume\": \"%s\", \"currentOS\": \"rasplex\"}" % vol
 		#Manage POSTS requests
 		elif method == "POST":
 			#get the variables from HTTP request in the last header
@@ -100,78 +101,78 @@ while 1:
 					if newOS == "raspbian" or newOS == "retropie" or newOS == "kodi":
 						try:
 							if "test" in variables.keys():
-								message = "success"
+								message = "{\"message\": \"success\"}" 
 								statusCode = "200 OK"
 							else:
-								message = "attempting to switch OS"
+								message = "{\"message\": \"attempting to switch OS\"}" 
 								statusCode = "200 OK"
 								connectionSocket.send(createHeader(statusCode, message))
 								subprocess.check_output("./%s" % newOS, shell=True).decode()
 						except Exception as e:
-							message = "Switch was not sucessfully excecuted: %s" % str(e)
+							message = message = "{\"message\": \"Switch was not sucessfully excecuted: %s\"}" % str(e)
 					else:
-						message = "Invalid OS"
+						message = "{\"message\": \"Invalid OS\"}" 
 				else:
-					message = "Please enter an OS to switch to"
+					message = "{\"message\": \"Please enter an OS to switch to\"}" 
 			elif path == "/reboot":
 				#This call will reboot the raspberry pi
 				try:
 					if "test" in variables.keys():
-						message = "success"
+						message = "{\"message\": \"success\"}" 
 						statusCode = "200 OK"
 					else:
-						message = "attempting reboot"
+						message = "{\"message\": \"attempting reboot\"}" 
 						statusCode = "200 OK"
 						connectionSocket.send(createHeader(statusCode, message))
 						subprocess.check_output("reboot", shell=True).decode()
 				except:
-					message = "reboot failed:"
+					message = "{\"message\": \"reboot failed\"}" 
 			elif path == "/rca":
 				#this call sets display mode to RCA, displaying on my LCD touchscreen
 				try:
 					if "test" in variables.keys():
-						message = "success"
+						message = "{\"message\": \"success\"}" 
 						statusCode = "200 OK"
 					else:
-						message = "attempting reboot"
+						message = "{\"message\": \"attempting reboot\"}" 
 						statusCode = "200 OK"
 						connectionSocket.send(createHeader(statusCode, message))
 						subprocess.check_output("./rca", shell=True).decode()
 				except:
-					message = "reboot failed"
+					message = "{\"message\": \"reboot failed\"}" 
 			elif path == "/hdmi":
 				#This call will set display mode to HDMI
 				try:
 					if "test" in variables.keys():
-						message = "success"
+						message = "{\"message\": \"success\"}" 
 						statusCode = "200 OK"
 					else:
-						message = "attempting reboot"
+						message = "{\"message\": \"attempting reboot\"}" 
 						statusCode = "200 OK"
 						connectionSocket.send(createHeader(statusCode, message))
 						subprocess.check_output("./hdmi", shell=True).decode()
 				except:
-					message = "reboot failed"
+					message = "{\"message\": \"reboot failed\"}" 
 			elif path == "/volumeup":
 				#This call turns the volume up
 				try:
 					newVol = updateVol("+")
-					message = "%d\n" % newVol
+					message = "{\"newVolume\": \"%s\", \"message\": \"success\"}" % newVol 
 					statusCode = "200 OK"
 					# subprocess.check_output("./vol +", shell=True).decode()
 					# message = "volume increased"
 				except:
-					message = "%d\n" % vol
+					message = "{\"newVolume\": \"%s\", \"message\": \"error\"}" % vol
 			elif path == "/volumedown":
 				#This call turns the volume down
 				try:
 					newVol = updateVol("-")
-					message = "%d\n" % newVol
+					message = "{\"newVolume\": \"%s\", \"message\": \"success\"}" % newVol
 					statusCode = "200 OK"
 					# subprocess.check_output("./vol -", shell=True).decode()
 					# message = "volume decreased"
 				except:
-					message = "%d\n" % vol
+					message = "{\"newVolume\": \"%s\", \"message\": \"error\"}" % vol
 		#send the header and close the socket
 		connectionSocket.send(createHeader(statusCode, message))
 		connectionSocket.close()
