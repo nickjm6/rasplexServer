@@ -1,6 +1,7 @@
 #import the necessary dependancies
 from socket import *
 import subprocess
+import json
 
 #set server port to 80, initialize the socket and bind it to the proper port
 serverPort = 80
@@ -42,7 +43,7 @@ def getVars(varString):
 
 def createHeader(status, message):
 	version = "HTTP/1.1"
-	headers = "Content-Type: text/json\nAccess-Control-Allow-Origin: *\n\n"
+	headers = "Content-Type: application/json\nAccess-Control-Allow-Origin: *\n\n"
 	res = "%s %s\n%s%s" % (version, status, headers, message)
 	return res;
 
