@@ -85,11 +85,11 @@ while 1:
 			elif path == "/getVol":
 				#This call return the volume level
 				statusCode = "200 OK"
-				message = "{\"volume\": \"%s\"}" % vol
+				message = "{\"volume\": %d}" % vol
 				print(message)
 			elif path == "/osAndVolume":
 				statusCode = "200 OK"
-				message = "{\"volume\": \"%s\", \"currentOS\": \"rasplex\"}" % vol
+				message = "{\"volume\": %d, \"currentOS\": \"rasplex\"}" % vol
 		#Manage POSTS requests
 		elif method == "POST":
 			#get the variables from HTTP request in the last header
@@ -158,22 +158,22 @@ while 1:
 				#This call turns the volume up
 				try:
 					newVol = updateVol("+")
-					message = "{\"newVolume\": \"%s\", \"message\": \"success\"}" % newVol 
+					message = "{\"volume\": %d, \"message\": \"success\"}" % newVol 
 					statusCode = "200 OK"
 					# subprocess.check_output("./vol +", shell=True).decode()
 					# message = "volume increased"
 				except:
-					message = "{\"newVolume\": \"%s\", \"message\": \"error\"}" % vol
+					message = "{\"volume\": %d, \"message\": \"error\"}" % vol
 			elif path == "/volumedown":
 				#This call turns the volume down
 				try:
 					newVol = updateVol("-")
-					message = "{\"newVolume\": \"%s\", \"message\": \"success\"}" % newVol
+					message = "{\"volume\": %d, \"message\": \"success\"}" % newVol
 					statusCode = "200 OK"
 					# subprocess.check_output("./vol -", shell=True).decode()
 					# message = "volume decreased"
 				except:
-					message = "{\"newVolume\": \"%s\", \"message\": \"error\"}" % vol
+					message = "{\"volume\": %d, \"message\": \"error\"}" % vol
 		#send the header and close the socket
 		connectionSocket.send(createHeader(statusCode, message))
 		connectionSocket.close()
